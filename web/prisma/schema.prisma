@@ -1,0 +1,116 @@
+// Modelo de dados do Estágio Zero — ver seção 8 do documento de
+// pré-engenharia (Usuários com papel, Posts, Categorias, Tags, Comentários
+// com status pendente/aprovado).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  AUTHOR
+  CONTRIBUTOR
+}
+
+enum PostStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         Role      @default(CONTRIBUTOR)
+  bio          String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  posts        Post[]
+
+  @@map("users")
+}
+
+model Category {
+  id    String @id @default(cuid())
+  slug  String @unique
+  name  String
+  posts Post[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  slug  String @unique
+  name  String
+  posts PostTag[]
+
+  @@map("tags")
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  excerpt     String
+  body        String
+  imageUrl    String?
+  badge       String?
+  status      PostStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  author     User     @relation(fields: [authorId], references: [id])
+  authorId   String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  tags     PostTag[]
+  comments Comment[]
+
+  @@index([status, publishedAt])
+  @@map("posts")
+}
+
+// Tabela de junção explícita (em vez de many-to-many implícita do Prisma)
+// pra manter o schema legível no diagrama ER e permitir campos extra depois
+// (ex: ordem de exibição) sem migração destrutiva.
+model PostTag {
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId  String
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+model Comment {
+  id            String        @id @default(cuid())
+  authorName    String
+  authorEmail   String?
+  body          String
+  status        CommentStatus @default(PENDING)
+  ipAddress     String?
+  createdAt     DateTime      @default(now())
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  @@index([postId, status])
+  @@map("comments")
+}

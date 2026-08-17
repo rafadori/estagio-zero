@@ -41,6 +41,9 @@ web/.env*.local
 *.tsbuildinfo
 **/next-env.d.ts
 
+# prisma generated client (regenerate with `npx prisma generate`)
+web/src/generated
+
 # editor
 .vscode/*
 !.vscode/extensions.json
