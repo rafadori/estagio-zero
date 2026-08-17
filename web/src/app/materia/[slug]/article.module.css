@@ -1,0 +1,131 @@
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 820px;
+  margin: 0 auto;
+  padding-top: var(--space-7);
+  text-align: center;
+}
+
+.title {
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: var(--text-2xl);
+  }
+}
+
+.byline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.byline strong {
+  color: var(--color-text);
+}
+
+.hero {
+  max-width: var(--container-max);
+  margin: var(--space-6) auto 0;
+  padding: 0 var(--gutter);
+}
+
+.heroMedia {
+  aspect-ratio: 21 / 9;
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-md);
+  border: var(--border-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}
+
+.body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--gutter) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.body p {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.authorBox {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  margin-top: var(--space-7);
+  padding: var(--space-5);
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-md);
+  border: var(--border-hairline);
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-tint);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-lg);
+}
+
+.authorName {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+}
+
+.authorRole {
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  font-weight: 600;
+}
+
+.authorBio {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+}
+
+.divider {
+  max-width: 720px;
+  margin: var(--space-7) auto 0;
+  padding: 0 var(--gutter);
+}
+
+.commentsWrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--gutter) var(--space-8);
+}

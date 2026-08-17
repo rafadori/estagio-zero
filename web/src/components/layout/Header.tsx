@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { categories } from "@/lib/posts";
 import { ThemeToggle } from "./ThemeToggle";
+import { MobileNav } from "./MobileNav";
 import styles from "./Header.module.css";
 
 export function Header() {
@@ -33,6 +34,7 @@ export function Header() {
             <Search size={16} />
           </Link>
           <ThemeToggle />
+          <MobileNav categories={categories} />
         </div>
       </div>
     </header>

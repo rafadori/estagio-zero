@@ -37,7 +37,7 @@ export default function Home() {
       </section>
 
       {categories.map((category) => {
-        const categoryPosts = getPostsByCategory(category.slug);
+        const categoryPosts = getPostsByCategory(category.slug, 3);
         if (categoryPosts.length === 0) return null;
 
         return (
