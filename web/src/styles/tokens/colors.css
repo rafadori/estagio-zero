@@ -1,0 +1,55 @@
+:root {
+  --blue-050: #eaf2ff;
+  --blue-100: #cfe1ff;
+  --blue-300: #7fabff;
+  --blue-500: #2a7bff;
+  --blue-600: #0066ff;
+  --blue-700: #0050cc;
+  --blue-900: #001f52;
+
+  --ink-900: #0b0d10;
+  --ink-700: #2b2f36;
+  --ink-500: #5b616b;
+  --ink-300: #9aa1ab;
+  --ink-100: #e4e7eb;
+  --ink-050: #f4f5f7;
+  --paper-000: #ffffff;
+
+  --flag-yellow: #ffcc00;
+  --signal-red: #e5484d;
+
+  --color-bg: var(--paper-000);
+  --color-surface: var(--paper-000);
+  --color-surface-sunken: var(--ink-050);
+  --color-border: var(--ink-100);
+
+  --color-text: var(--ink-900);
+  --color-text-muted: var(--ink-500);
+
+  --color-accent: var(--blue-600);
+  --color-accent-hover: var(--blue-700);
+  --color-accent-tint: var(--blue-050);
+  --color-accent-fg: #ffffff;
+
+  --color-tag-bg: var(--ink-050);
+  --color-tag-text: var(--ink-700);
+  --color-danger: var(--signal-red);
+}
+
+[data-theme="dark"] {
+  --color-bg: var(--ink-900);
+  --color-surface: #14171c;
+  --color-surface-sunken: #1b1f26;
+  --color-border: #262b33;
+
+  --color-text: #f4f5f7;
+  --color-text-muted: #9aa1ab;
+
+  --color-accent: var(--blue-500);
+  --color-accent-hover: var(--blue-300);
+  --color-accent-tint: #10233f;
+  --color-accent-fg: #06101f;
+
+  --color-tag-bg: #1b1f26;
+  --color-tag-text: #d7dade;
+}

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/est-gio-zero-design-system-48233c68-0ae8-4555-aac9-bfd2c827b913/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/est-gio-zero-design-system-48233c68-0ae8-4555-aac9-bfd2c827b913/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/est-gio-zero-design-system-48233c68-0ae8-4555-aac9-bfd2c827b913/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/est-gio-zero-design-system-48233c68-0ae8-4555-aac9-bfd2c827b913/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/est-gio-zero-design-system-48233c68-0ae8-4555-aac9-bfd2c827b913/tokens/base.css">
+  <link rel="stylesheet" href="_ds/est-gio-zero-design-system-48233c68-0ae8-4555-aac9-bfd2c827b913/tokens/components.css">
+  <link rel="stylesheet" href="_ds/est-gio-zero-design-system-48233c68-0ae8-4555-aac9-bfd2c827b913/styles.css">
+  <script src="_ds/est-gio-zero-design-system-48233c68-0ae8-4555-aac9-bfd2c827b913/_ds_bundle.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</helmet>
+<div style="min-height:100vh;background:var(--color-bg);display:flex;flex-direction:column;font-family:var(--font-body)">
+  <header style="position:sticky;top:0;background:var(--color-bg);border-bottom:1px solid var(--color-border);z-index:20">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <div onClick="{{ goHome }}" style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;font-size:22px;cursor:pointer;color:var(--color-text)">Estágio<span style="color:var(--color-accent)">Zero</span></div>
+      <nav style="display:flex;gap:28px;font-family:var(--font-display);text-transform:uppercase;font-size:13px;letter-spacing:.04em">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+          <button onClick="{{ item.go }}" style="background:none;border:none;cursor:pointer;padding:0;font:inherit;letter-spacing:inherit;color:{{ item.activeColor }}">{{ item.name }}</button>
+        </sc-for>
+      </nav>
+      <div style="display:flex;gap:16px;align-items:center">
+        <button onClick="{{ goSearchScreen }}" style="border:1px solid var(--color-border);background:none;color:var(--color-text);border-radius:2px;padding:8px;cursor:pointer;display:flex" aria-label="Buscar"><i data-lucide="search" style="width:18px;height:18px"></i></button>
+        <button onClick="{{ goLoginOrPanel }}" style="border:1px solid var(--color-border);background:none;color:var(--color-text);border-radius:2px;padding:8px;cursor:pointer;display:flex" aria-label="Conta"><i data-lucide="user" style="width:18px;height:18px"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main style="flex:1;max-width:1280px;margin:0 auto;padding:0 24px;width:100%">
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:1.3fr .7fr;gap:24px;padding:32px 0">
+        <div onClick="{{ featuredOpen }}" style="cursor:pointer;display:contents">
+          <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.PostCard" featured="{{ true }}" category="{{ featured.category }}" title="{{ featured.title }}" excerpt="{{ featured.excerpt }}" author="{{ featured.author }}" date="{{ featured.date }}" read-time="{{ featured.readTime }}" href="javascript:void(0)" hint-size="100%,420px"></x-import>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="font-family:var(--font-display);text-transform:uppercase;font-size:14px;letter-spacing:.08em;color:var(--color-accent);border-bottom:2px solid var(--color-accent);display:inline-block;padding-bottom:4px;margin-bottom:8px;width:fit-content">Mais lidas</div>
+          <sc-for list="{{ sidebarPosts }}" as="p" hint-placeholder-count="3">
+            <div onClick="{{ p.open }}" style="display:flex;flex-direction:column;gap:8px;padding-bottom:16px;border-bottom:1px solid var(--color-border);cursor:pointer">
+              <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.Tag" tone="accent" hint-size="auto,24px">{{ p.category }}</x-import>
+              <h4 style="font-family:var(--font-display);text-transform:uppercase;font-size:15px;line-height:1.1;margin:0">{{ p.title }}</h4>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="font-family:var(--font-display);text-transform:uppercase;font-size:14px;letter-spacing:.08em;color:var(--color-accent);border-bottom:2px solid var(--color-accent);display:inline-block;padding-bottom:4px;margin-bottom:24px;width:fit-content">Últimas postagens</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding-bottom:64px">
+        <sc-for list="{{ latestGrid }}" as="p" hint-placeholder-count="6">
+          <div onClick="{{ p.open }}" style="cursor:pointer;display:contents">
+            <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.PostCard" category="{{ p.category }}" title="{{ p.title }}" excerpt="{{ p.excerpt }}" author="{{ p.author }}" date="{{ p.date }}" read-time="{{ p.readTime }}" href="javascript:void(0)" hint-size="100%,320px"></x-import>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-for list="{{ catBlocks }}" as="block" hint-placeholder-count="4">
+        <div style="padding-bottom:48px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px">
+            <div style="font-family:var(--font-display);text-transform:uppercase;font-size:14px;letter-spacing:.08em;color:var(--color-accent);border-bottom:2px solid var(--color-accent);display:inline-block;padding-bottom:4px">{{ block.name }}</div>
+            <button onClick="{{ block.go }}" style="background:none;border:none;color:var(--color-accent);font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;padding:0">Ver tudo →</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px">
+            <sc-for list="{{ block.posts }}" as="p" hint-placeholder-count="4">
+              <div onClick="{{ p.open }}" style="cursor:pointer;display:contents">
+                <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.PostCard" category="{{ p.category }}" title="{{ p.title }}" excerpt="{{ p.excerpt }}" author="{{ p.author }}" date="{{ p.date }}" read-time="{{ p.readTime }}" href="javascript:void(0)" hint-size="100%,300px"></x-import>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </sc-if>
+
+    <sc-if value="{{ isCategory }}">
+      <div style="padding:32px 0 64px;display:grid;grid-template-columns:1fr 280px;gap:40px">
+        <div>
+          <h1 style="font-size:2.25rem;margin-bottom:8px">{{ activeCategory }}</h1>
+          <p style="color:var(--color-text-muted);font-size:14px;margin:0 0 24px">{{ categoryCount }} matérias</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+            <sc-for list="{{ categoryPosts }}" as="p" hint-placeholder-count="4">
+              <div onClick="{{ p.open }}" style="cursor:pointer;display:contents">
+                <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.PostCard" category="{{ p.category }}" title="{{ p.title }}" excerpt="{{ p.excerpt }}" author="{{ p.author }}" date="{{ p.date }}" read-time="{{ p.readTime }}" href="javascript:void(0)" hint-size="100%,320px"></x-import>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <aside style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:var(--font-display);text-transform:uppercase;font-size:13px;letter-spacing:.06em;color:var(--color-text-muted);margin-bottom:8px">Categorias</div>
+          <sc-for list="{{ categorySidebar }}" as="c" hint-placeholder-count="4">
+            <button onClick="{{ c.go }}" style="display:flex;justify-content:space-between;align-items:center;background:none;border:1px solid {{ c.borderColor }};border-radius:2px;padding:12px 16px;cursor:pointer;font-family:var(--font-body);font-size:14px;text-align:left;color:{{ c.color }}">
+              <span>{{ c.name }}</span><span style="color:var(--color-text-muted);font-size:12px">{{ c.count }}</span>
+            </button>
+          </sc-for>
+        </aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPost }}">
+      <article style="max-width:760px;margin:0 auto;padding:48px 0 64px">
+        <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.Tag" tone="accent" hint-size="auto,24px">{{ activePost.category }}</x-import>
+        <h1 style="font-size:3rem;line-height:1.05;margin:16px 0 20px">{{ activePost.title }}</h1>
+        <div style="display:flex;gap:16px;color:var(--color-text-muted);font-size:14px;padding-bottom:24px;border-bottom:1px solid var(--color-border);margin-bottom:32px">
+          <span>{{ activePost.author }}</span><span>{{ activePost.date }}</span><span>{{ activePost.readTime }}</span>
+        </div>
+        <div style="aspect-ratio:16/9;background:var(--color-surface-sunken);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);border-radius:6px;margin-bottom:32px;font-size:13px">FOTO</div>
+        <div style="display:flex;flex-direction:column;gap:20px;font-size:17px;line-height:1.6;color:var(--color-text)">
+          <sc-for list="{{ activePost.body }}" as="para" hint-placeholder-count="3">
+            <p style="margin:0">{{ para }}</p>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;padding:32px 0;border-top:1px solid var(--color-border);margin-top:40px">
+          <sc-for list="{{ activePost.tags }}" as="tag" hint-placeholder-count="3">
+            <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.Tag" hint-size="auto,24px">{{ tag }}</x-import>
+          </sc-for>
+        </div>
+        <section style="padding-top:16px">
+          <h3 style="font-size:1.1rem;text-transform:uppercase;margin-bottom:24px">Comentários ({{ activeComments.length }})</h3>
+          <sc-if value="{{ hasComments }}">
+            <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:32px">
+              <sc-for list="{{ activeComments }}" as="c" hint-placeholder-count="2">
+                <div style="border-bottom:1px solid var(--color-border);padding-bottom:16px">
+                  <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--color-text-muted);margin-bottom:6px"><strong style="color:var(--color-text);font-weight:600">{{ c.name }}</strong><span>{{ c.date }}</span></div>
+                  <p style="margin:0;font-size:14px;line-height:1.5">{{ c.text }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noComments }}">
+            <p style="color:var(--color-text-muted);font-size:14px;margin-bottom:24px">Seja o primeiro a comentar.</p>
+          </sc-if>
+          <form onSubmit="{{ submitComment }}" style="display:flex;flex-direction:column;gap:12px;max-width:480px">
+            <input type="text" placeholder="Seu nome" value="{{ commentName }}" onChange="{{ setCommentName }}" style="padding:12px 14px;border:1px solid var(--color-border);border-radius:2px;font-family:var(--font-body);font-size:14px;background:var(--color-surface);color:var(--color-text)" />
+            <textarea placeholder="Escreva um comentário..." value="{{ commentText }}" onChange="{{ setCommentText }}" rows="3" style="padding:12px 14px;border:1px solid var(--color-border);border-radius:2px;font-family:var(--font-body);font-size:14px;resize:vertical;background:var(--color-surface);color:var(--color-text)"></textarea>
+            <div><x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.Button" variant="primary" size="md" hint-size="auto,44px">Comentar</x-import></div>
+          </form>
+          <p style="font-size:12px;color:var(--color-text-muted);margin-top:8px">Não precisa fazer login — só coloque seu nome.</p>
+        </section>
+      </article>
+    </sc-if>
+
+    <sc-if value="{{ isSearch }}">
+      <div style="padding:32px 0 64px">
+        <div style="max-width:640px;margin:0 auto 40px">
+          <input type="text" placeholder="Buscar matérias, categorias, autores..." value="{{ searchQuery }}" onChange="{{ setSearchQuery }}" style="width:100%;padding:16px 20px;border:1px solid var(--color-border);border-radius:2px;font-family:var(--font-body);font-size:16px;background:var(--color-surface);color:var(--color-text)" />
+        </div>
+        <p style="color:var(--color-text-muted);font-size:14px;margin-bottom:24px">{{ searchCount }} resultado(s)</p>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <sc-for list="{{ searchResults }}" as="p" hint-placeholder-count="5">
+            <div onClick="{{ p.open }}" style="display:flex;gap:20px;padding:16px;border:1px solid var(--color-border);border-radius:6px;cursor:pointer;align-items:center">
+              <div style="width:120px;aspect-ratio:16/10;flex-shrink:0;background:var(--color-surface-sunken);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:11px;border-radius:4px">FOTO</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.Tag" tone="accent" hint-size="auto,22px">{{ p.category }}</x-import>
+                <h4 style="font-size:16px;margin:0">{{ p.title }}</h4>
+                <div style="display:flex;gap:12px;font-size:12px;color:var(--color-text-muted)"><span>{{ p.author }}</span><span>{{ p.date }}</span></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLogin }}">
+      <div style="min-height:60vh;display:flex;align-items:center;justify-content:center;padding:48px 0">
+        <div style="width:100%;max-width:400px;border:1px solid var(--color-border);border-radius:6px;padding:32px">
+          <p style="font-size:12px;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px">Acesso exclusivo para autores</p>
+          <div style="display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid var(--color-border)">
+            <button onClick="{{ setAuthModeLogin }}" style="background:none;border:none;padding:8px 4px;font-family:var(--font-display);text-transform:uppercase;font-size:13px;cursor:pointer;border-bottom:2px solid {{ loginTabColor }};color:{{ loginTabColor }}">Login</button>
+            <button onClick="{{ setAuthModeSignup }}" style="background:none;border:none;padding:8px 4px;font-family:var(--font-display);text-transform:uppercase;font-size:13px;cursor:pointer;border-bottom:2px solid {{ signupTabColor }};color:{{ signupTabColor }}">Cadastro</button>
+          </div>
+          <form onSubmit="{{ submitAuth }}" style="display:flex;flex-direction:column;gap:14px">
+            <sc-if value="{{ isSignupMode }}">
+              <input type="text" placeholder="Nome" style="padding:12px 14px;border:1px solid var(--color-border);border-radius:2px;font-size:14px;background:var(--color-surface);color:var(--color-text)" />
+            </sc-if>
+            <input type="email" placeholder="E-mail" style="padding:12px 14px;border:1px solid var(--color-border);border-radius:2px;font-size:14px;background:var(--color-surface);color:var(--color-text)" />
+            <input type="password" placeholder="Senha" style="padding:12px 14px;border:1px solid var(--color-border);border-radius:2px;font-size:14px;background:var(--color-surface);color:var(--color-text)" />
+            <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.Button" variant="primary" size="md" hint-size="auto,44px">{{ authSubmitLabel }}</x-import>
+          </form>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAuthorPanel }}">
+      <div style="padding:32px 0 64px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+          <div>
+            <h1 style="font-size:1.75rem;margin-bottom:4px">Meus posts</h1>
+            <p style="color:var(--color-text-muted);font-size:14px;margin:0">Logado como Marina Costa</p>
+          </div>
+          <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.Button" variant="primary" size="md" onClick="{{ newPost }}" hint-size="auto,44px">Novo post</x-import>
+        </div>
+        <div style="display:flex;flex-direction:column;border:1px solid var(--color-border);border-radius:6px;overflow:hidden">
+          <sc-for list="{{ authorPosts }}" as="p" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:1fr 140px 100px 100px;gap:16px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--color-border)">
+              <span style="font-size:15px;font-weight:600">{{ p.title }}</span>
+              <span style="font-size:13px;color:var(--color-text-muted)">{{ p.category }}</span>
+              <x-import component-from-global-scope="EstGioZeroDesignSystem_48233c.Tag" tone="{{ p.statusTone }}" hint-size="auto,24px">{{ p.statusLabel }}</x-import>
+              <span style="font-size:13px;color:var(--color-text-muted)">{{ p.date }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <button onClick="{{ logout }}" style="margin-top:24px;background:none;border:none;color:var(--color-text-muted);font-size:13px;cursor:pointer;text-decoration:underline;padding:0">Sair</button>
+      </div>
+    </sc-if>
+  </main>
+
+  <footer style="border-top:1px solid var(--color-border);padding:32px 0;color:var(--color-text-muted);font-size:13px">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px">© 2026 Estágio Zero. Feito por quem também troca o próprio óleo.</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CATEGORIES = ['Manutenção','Tuning','Clássicos','Elétricos'];
+
+const POSTS = [
+{id:1,title:"Novo Polo Track: o Volks mais barato ficou bom?",excerpt:"Rodamos 300km com o motorzinho 1.0 pra saber se vale o preço.",category:"Test Drive",author:"Marina Costa",date:"12 ago",readTime:"6 min",tags:["Volkswagen","Polo","Test Drive"],status:"publicado",body:[
+"O Polo Track chegou pra ocupar o posto de Volks mais barato da linha, e isso sempre levanta a mesma pergunta: cortaram de onde? Rodamos 300km entre estrada e cidade pra descobrir.",
+"O motor 1.0 aspirado não é rápido — 0 a 100 km/h em quase 12 segundos — mas responde bem no dia a dia, principalmente em terceira e quarta marcha. O bagageiro cresceu e o banco traseiro acomoda três adultos sem drama.",
+"Faltam itens que a concorrência já oferece de série, como piloto automático adaptativo. Mas pelo preço pedido, o Polo Track cumpre o que promete: ser o Volks acessível sem parecer descartável."]},
+{id:2,title:"HB20 automático vale o preço a mais?",excerpt:"Comparamos a versão automática com a manual pra ver se a diferença de R$ 8 mil compensa.",category:"Comparativo",author:"Marina Costa",date:"6 ago",readTime:"5 min",tags:["Hyundai","HB20","Comparativo"],status:"publicado",body:[
+"A versão automática do HB20 custa cerca de R$ 8 mil a mais que a manual equivalente. Botamos os dois lado a lado pra saber se a diferença se justifica no bolso e no uso real.",
+"No trânsito, o câmbio automático de seis marchas troca sem trancos e reduz o cansaço em viagens longas. Já no consumo, a diferença é pequena — menos de 1 km/l a favor da manual.",
+"Pra quem dirige na cidade todo dia, o automático compensa. Pra quem roda pouco ou prefere economizar, a manual ainda é a escolha mais racional."]},
+{id:3,title:"Fórmula 1: o que muda no regulamento de 2027",excerpt:"FIA confirma mudanças que prometem deixar o grid mais parelho a partir de 2027.",category:"Corrida",author:"Léo Prado",date:"8 ago",readTime:"7 min",tags:["Fórmula 1","Regulamento","Corrida"],status:"publicado",body:[
+"A FIA confirmou as principais mudanças técnicas que valem a partir de 2027, e elas prometem reaproximar o pelotão. O carro fica mais leve e menor, e a aerodinâmica muda para reduzir a esteira de ar sujo entre carros.",
+"O motor também muda: mais eletrificação, menos dependência da combustão. A ideia é baratear o desenvolvimento sem perder a essência híbrida que a categoria adotou em 2014.",
+"Fica a dúvida se as equipes menores vão conseguir acompanhar o ritmo de gastos. Histórico recente mostra que toda mudança grande de regulamento custa caro antes de nivelar o grid."]},
+{id:4,title:"Pneu careca: quando trocar de verdade",excerpt:"1,6mm de sulco é o limite — e o teste da moeda ainda funciona.",category:"Manutenção",author:"Bia Torres",date:"9 ago",readTime:"5 min",tags:["Pneus","Segurança","Manutenção"],status:"publicado",body:[
+"Todo mundo sabe que pneu careca é perigoso, mas poucos sabem o número exato: 1,6mm de sulco é o limite legal no Brasil. Abaixo disso, a frenagem em pista molhada piora muito.",
+"O teste da moeda ainda funciona: encaixe uma moeda de R$1 no sulco central. Se a borda dourada sumir, o pneu está no limite. Vale rodar o carro pra checar os quatro, porque o desgaste raramente é igual."]},
+{id:5,title:"Troca de óleo: o que muda entre mineral, semissintético e sintético",excerpt:"Mineral, semissintético ou sintético: o que muda no intervalo de troca e no bolso.",category:"Manutenção",author:"Bia Torres",date:"5 ago",readTime:"4 min",tags:["Óleo","Motor","Manutenção"],status:"publicado",body:[
+"A diferença não é só preço. O óleo sintético aguenta temperaturas mais altas e mantém a viscosidade por mais tempo, o que estica o intervalo de troca em boa parte dos carros modernos.",
+"Já o mineral, mais barato, exige troca mais frequente — geralmente a cada 5 mil km contra 10 mil do sintético. Antes de economizar na troca, vale checar o manual do carro: usar óleo errado pode até anular a garantia."]},
+{id:6,title:"Bateria fraca: 5 sinais antes de te deixar na mão",excerpt:"Cinco sinais de que a bateria está no fim, antes que ela te deixe na mão.",category:"Manutenção",author:"Rafa Lima",date:"3 ago",readTime:"4 min",tags:["Bateria","Elétrica","Manutenção"],status:"publicado",body:[
+"Partida lenta pela manhã, luzes do painel piscando, rádio que reseta sozinho: são sinais clássicos de que a bateria está no fim. Ignorar eles costuma custar caro — geralmente numa hora ruim.",
+"A vida útil média de uma bateria automotiva fica entre 2 e 4 anos, dependendo do uso. Se o carro fica parado por dias seguidos, vale rodar pelo menos uma vez por semana pra não descarregar de vez."]},
+{id:7,title:"Revisão dos 10 mil km: o que realmente precisa ser feito",excerpt:"Nem toda revisão de 10 mil km precisa custar uma fortuna. Saiba o que é essencial.",category:"Manutenção",author:"Bia Torres",date:"1 ago",readTime:"5 min",tags:["Revisão","Oficina","Manutenção"],status:"publicado",body:[
+"Nem toda revisão de 10 mil km precisa custar uma fortuna. Óleo e filtro são obrigatórios; filtro de ar e de cabine, na maioria das vezes, ainda aguentam mais um ciclo.",
+"Desconfie de oficina que empurra troca de correia ou pastilha de freio sem te mostrar o desgaste. Peça pra ver a peça antes de autorizar — é seu direito, e evita revisão inflada."]},
+{id:8,title:"Suspensão rebaixada: o que perde e o que ganha no dia a dia",excerpt:"Rebaixar melhora a curva, mas o preço se paga em cada buraco da rua.",category:"Tuning",author:"Léo Prado",date:"11 ago",readTime:"5 min",tags:["Suspensão","Tuning","Rebaixado"],status:"publicado",body:[
+"Rebaixar o carro melhora a estabilidade em curva e deixa o visual mais agressivo, sem dúvida. Mas o preço disso é sentir cada buraco e lombada com o dobro da intensidade.",
+"Molas esportivas costumam ser o meio-termo: rebaixam menos que kits de rosca, mas preservam parte do conforto. Rebaixamento extremo também acelera o desgaste de buchas e terminais de direção."]},
+{id:9,title:"Chip de potência vale a pena? Testamos em três carros",excerpt:"Testamos chip de potência em três motores aspirados diferentes.",category:"Tuning",author:"Léo Prado",date:"7 ago",readTime:"6 min",tags:["Chip","Potência","Tuning"],status:"publicado",body:[
+"Testamos chip de potência em três motores aspirados diferentes. O ganho variou de 8% a 15% de potência, mas o resultado depende muito da calibração de fábrica de cada carro.",
+"O risco real está na garantia: praticamente toda montadora considera o chip motivo pra recusar cobertura do motor. Vale pesar se o ganho de resposta compensa perder esse respaldo."]},
+{id:10,title:"Escape esportivo: som bom custa quanto (e o motor aguenta)?",excerpt:"Som bom custa entre R$ 1.500 e R$ 5.000 — e o motor aguenta numa boa.",category:"Tuning",author:"Rafa Lima",date:"4 ago",readTime:"5 min",tags:["Escape","Som","Tuning"],status:"publicado",body:[
+"Um escape esportivo de qualidade custa entre R$ 1.500 e R$ 5.000, dependendo da marca e do material. Aço inox dura mais e resiste melhor à corrosão que o aço carbono comum.",
+"O motor aguenta numa boa, desde que a contrapressão do escape seja calculada certo. Escape errado pode até reduzir potência, mesmo soando mais alto — som bom não é sinônimo de ganho de performance."]},
+{id:11,title:"Rodas maiores, direção pior? O que ninguém te conta",excerpt:"Aro maior muda o visual, mas pesa na direção e no consumo.",category:"Tuning",author:"Léo Prado",date:"31 jul",readTime:"4 min",tags:["Rodas","Pneus","Tuning"],status:"publicado",body:[
+"Trocar de aro 15 pra 18 muda a estética, mas também aumenta o peso não-suspenso do carro. Isso deixa a direção mais pesada e pode até piorar o consumo de combustível.",
+"Pneus de perfil mais baixo, comuns em rodas maiores, transmitem mais buraco pra dentro do carro. Antes de trocar, vale simular a combinação roda-pneu pra não perder o conforto que o carro tinha de fábrica."]},
+{id:12,title:"Fusca 1979 recuperado: quanto custou trazer ele de volta",excerpt:"Recuperamos um Fusca parado há oito anos e documentamos cada real gasto.",category:"Clássicos",author:"Marina Costa",date:"10 ago",readTime:"8 min",tags:["Fusca","Restauração","Clássicos"],status:"publicado",body:[
+"Compramos um Fusca 1979 parado há oito anos numa garagem e decidimos documentar cada real gasto na recuperação. O total, incluindo motor e lataria, passou de R$ 18 mil.",
+"A maior surpresa não foi o motor — peças de Fusca ainda são fáceis de achar — e sim a elétrica original, que exigiu retrabalho quase completo. No fim, o carro roda como novo, e vale hoje mais que o dobro do investido."]},
+{id:13,title:"Opala: por que o preço não para de subir",excerpt:"Um Opala que custava R$ 15 mil há cinco anos hoje passa de R$ 40 mil.",category:"Clássicos",author:"Marina Costa",date:"2 ago",readTime:"6 min",tags:["Opala","Chevrolet","Clássicos"],status:"rascunho",body:[
+"Um Opala em bom estado que custava R$ 15 mil há cinco anos hoje passa fácil de R$ 40 mil. A escassez de unidades bem conservadas e a nostalgia de quem cresceu vendo o carro explicam boa parte da valorização.",
+"Motores 4 cilindros e 6 cilindros têm cotações bem diferentes: o 6 cilindros, mais raro e cobiçado, costuma valer 30% a mais. Documentação original também pesa — e pesa muito — no preço final."]},
+{id:14,title:"Puma GTE: o esportivo brasileiro que quase ninguém lembra",excerpt:"O esportivo brasileiro de fibra de vidro que superava 180 km/h nos anos 70.",category:"Clássicos",author:"Marina Costa",date:"30 jul",readTime:"7 min",tags:["Puma","Esportivo Nacional","Clássicos"],status:"publicado",body:[
+"Antes da Puma virar sinônimo de tênis pra muita gente nova, era uma fabricante brasileira de esportivos com carroceria de fibra de vidro. O GTE, dos anos 70, chegava a superar 180 km/h — impressionante pra época.",
+"Hoje sobrevivem poucas unidades, a maioria em coleções particulares. Encontrar peças é o maior desafio de quem decide restaurar um: praticamente tudo precisa ser fabricado sob encomenda."]},
+{id:15,title:"Restaurar ou preservar? O dilema de quem compra um clássico",excerpt:"Restaurar deixa como novo. Preservar mantém a história. Qual vale mais?",category:"Clássicos",author:"Marina Costa",date:"27 jul",readTime:"5 min",tags:["Restauração","Colecionismo","Clássicos"],status:"rascunho",body:[
+"Restaurar deixa o carro como novo, mas apaga a história — cada marca de uso também conta uma parte da vida do veículo. Preservar mantém a autenticidade, só que exige aceitar imperfeições.",
+"No mercado de colecionadores, carros originais e bem preservados costumam valer mais que os totalmente restaurados. Antes de decidir, vale pesquisar o que compradores da categoria específica do carro valorizam mais."]},
+{id:16,title:"BYD Dolphin Mini chega por R$ 100 mil",excerpt:"O elétrico mais barato da BYD chega ao Brasil com autonomia de 280 km.",category:"Elétricos",author:"Rafa Lima",date:"10 ago",readTime:"4 min",tags:["BYD","Elétrico","Dolphin Mini"],status:"publicado",body:[
+"O Dolphin Mini chega como o elétrico mais barato da BYD no Brasil, com preço a partir de R$ 100 mil. A autonomia declarada é de cerca de 280 km no ciclo urbano.",
+"O carro é pequeno — pensado pra cidade — mas vem com itens que surpreendem no segmento, como carregamento sem fio pro celular e piloto automático adaptativo de série."]},
+{id:17,title:"Motos elétricas: 5 modelos pra sair da gasolina",excerpt:"Cinco motos elétricas disponíveis no Brasil, de R$ 8 mil a R$ 45 mil.",category:"Elétricos",author:"Rafa Lima",date:"4 ago",readTime:"6 min",tags:["Motos","Elétrico","Sustentabilidade"],status:"publicado",body:[
+"Selecionamos cinco motos elétricas disponíveis no Brasil hoje, de opções urbanas de baixo custo até modelos com autonomia pra encarar rodovia. Os preços vão de R$ 8 mil a R$ 45 mil.",
+"O maior obstáculo ainda é a infraestrutura de recarga fora de casa. Mas pra quem roda só na cidade, o custo por km rodado fica bem abaixo do de uma moto a combustão."]},
+{id:18,title:"Quanto custa carregar um elétrico em casa por mês",excerpt:"Carregar um elétrico popular em casa custa entre R$ 150 e R$ 250 por mês.",category:"Elétricos",author:"Rafa Lima",date:"29 jul",readTime:"4 min",tags:["Recarga","Energia","Elétrico"],status:"publicado",body:[
+"Fizemos a conta com a tarifa média de energia elétrica: carregar um elétrico popular em casa custa entre R$ 150 e R$ 250 por mês, rodando cerca de 1.200 km — bem menos que o equivalente em gasolina.",
+"O valor varia conforme a bandeira tarifária e o horário de carregamento. Carregar de madrugada, em tarifas com desconto noturno, pode baixar ainda mais essa conta."]},
+{id:19,title:"Autonomia real x autonomia da ficha técnica: fizemos o teste",excerpt:"A ficha técnica promete uma autonomia. A estrada, no trânsito real, entrega outra.",category:"Elétricos",author:"Rafa Lima",date:"26 jul",readTime:"5 min",tags:["Autonomia","Bateria","Elétrico"],status:"publicado",body:[
+"A ficha técnica promete uma autonomia; a estrada, no dia a dia, entrega outra. Testamos três elétricos populares em condição real de uso, com ar-condicionado ligado e trânsito de cidade grande.",
+"A diferença chegou a 18% pra menos em relação ao valor declarado. Frio, calor extremo e velocidade constante acima de 100 km/h são os maiores vilões da autonomia real."]}
+];
+
+class Component extends DCLogic {
+  state = {
+    screen: 'home',
+    activeCategory: 'Manutenção',
+    activePostId: 1,
+    searchQuery: '',
+    authMode: 'login',
+    isAuthor: false,
+    commentName: '',
+    commentText: '',
+    comments: {
+      1: [
+        {name:'Carlos Menezes',text:'Comprei o Track mês passado, motor realmente responde bem na cidade.',date:'13 ago'},
+        {name:'Juliana Alves',text:'Faltou falar do porta-malas, é maior que o Gol antigo?',date:'13 ago'}
+      ],
+      4: [{name:'Pedro Rocha',text:'Boa dica da moeda, vou testar no meu hoje.',date:'10 ago'}],
+      12: [{name:'Fernanda Dias',text:'Que restauração sensacional, dá vontade de fazer o mesmo com o meu.',date:'11 ago'}]
+    },
+    extraPosts: []
+  };
+
+  componentDidMount() { this.tickIcons(); }
+  componentDidUpdate() { this.tickIcons(); }
+  tickIcons() { if (window.lucide) window.lucide.createIcons(); }
+
+  goHome() { this.setState({ screen: 'home' }); }
+  goCategory(name) { this.setState({ screen: 'category', activeCategory: name }); }
+  goPost(id) { this.setState({ screen: 'post', activePostId: id }); window.scrollTo(0,0); }
+  goSearch() { this.setState({ screen: 'search' }); }
+  goLogin() { this.setState({ screen: 'login' }); }
+  goAuthorPanel() { this.setState({ screen: 'author' }); }
+
+  handleAddComment(e) {
+    e.preventDefault();
+    const { commentName, commentText, activePostId, comments } = this.state;
+    if (!commentName.trim() || !commentText.trim()) return;
+    const list = comments[activePostId] ? comments[activePostId].slice() : [];
+    list.push({ name: commentName, text: commentText, date: 'agora' });
+    this.setState({ comments: { ...comments, [activePostId]: list }, commentName: '', commentText: '' });
+  }
+
+  handleAuthSubmit(e) { e.preventDefault(); this.setState({ isAuthor: true, screen: 'author' }); }
+
+  handleNewPost() {
+    const s = this.state;
+    const draft = { id: 1000 + s.extraPosts.length, title: 'Novo rascunho sem título', category: 'Manutenção', author: 'Marina Costa', date: 'hoje', readTime: '-', excerpt: '', tags: [], body: [], status: 'rascunho' };
+    this.setState({ extraPosts: [...s.extraPosts, draft] });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const allPosts = [...POSTS, ...s.extraPosts];
+    const featured = POSTS[0];
+    const latest = POSTS.slice(1, 7);
+    const withOpen = p => ({ ...p, open: () => this.goPost(p.id) });
+
+    const catBlocks = CATEGORIES.map(name => ({
+      name,
+      go: () => this.goCategory(name),
+      posts: POSTS.filter(p => p.category === name).slice(0, 4).map(withOpen)
+    }));
+
+    const navItems = CATEGORIES.map(name => ({
+      name,
+      go: () => this.goCategory(name),
+      activeColor: (s.screen === 'category' && s.activeCategory === name) ? 'var(--color-accent)' : 'var(--color-text)'
+    }));
+
+    const categoryPosts = POSTS.filter(p => p.category === s.activeCategory).map(withOpen);
+    const categorySidebar = CATEGORIES.map(name => {
+      const active = name === s.activeCategory;
+      return {
+        name,
+        count: POSTS.filter(p => p.category === name).length,
+        go: () => this.goCategory(name),
+        active,
+        color: active ? 'var(--color-accent)' : 'var(--color-text)',
+        borderColor: active ? 'var(--color-accent)' : 'var(--color-border)'
+      };
+    });
+
+    const activePost = allPosts.find(p => p.id === s.activePostId) || POSTS[0];
+    const activeComments = s.comments[s.activePostId] || [];
+
+    const q = s.searchQuery.trim().toLowerCase();
+    const searchResults = (q ? allPosts.filter(p =>
+      p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.author.toLowerCase().includes(q)
+    ) : allPosts.slice(0, 8)).map(withOpen);
+
+    const authorPosts = allPosts.filter(p => p.author === 'Marina Costa').map(p => ({
+      ...p,
+      statusTone: p.status === 'publicado' ? 'accent' : 'default',
+      statusLabel: p.status === 'publicado' ? 'Publicado' : 'Rascunho'
+    }));
+
+    return {
+      isHome: s.screen === 'home',
+      isCategory: s.screen === 'category',
+      isPost: s.screen === 'post',
+      isSearch: s.screen === 'search',
+      isLogin: s.screen === 'login',
+      isAuthorPanel: s.screen === 'author',
+      goHome: () => this.goHome(),
+      goSearchScreen: () => this.goSearch(),
+      goLoginOrPanel: () => (s.isAuthor ? this.goAuthorPanel() : this.goLogin()),
+      navItems,
+      featured,
+      featuredOpen: () => this.goPost(featured.id),
+      sidebarPosts: latest.slice(0, 3).map(withOpen),
+      latestGrid: latest.map(withOpen),
+      catBlocks,
+      activeCategory: s.activeCategory,
+      categoryCount: categoryPosts.length,
+      categoryPosts,
+      categorySidebar,
+      activePost,
+      activeComments,
+      hasComments: activeComments.length > 0,
+      noComments: activeComments.length === 0,
+      commentName: s.commentName,
+      commentText: s.commentText,
+      setCommentName: e => this.setState({ commentName: e.target.value }),
+      setCommentText: e => this.setState({ commentText: e.target.value }),
+      submitComment: e => this.handleAddComment(e),
+      searchQuery: s.searchQuery,
+      setSearchQuery: e => this.setState({ searchQuery: e.target.value }),
+      searchResults,
+      searchCount: searchResults.length,
+      isSignupMode: s.authMode === 'cadastro',
+      isLoginMode: s.authMode === 'login',
+      loginTabColor: s.authMode === 'login' ? 'var(--color-accent)' : 'var(--color-text-muted)',
+      signupTabColor: s.authMode === 'cadastro' ? 'var(--color-accent)' : 'var(--color-text-muted)',
+      setAuthModeLogin: () => this.setState({ authMode: 'login' }),
+      setAuthModeSignup: () => this.setState({ authMode: 'cadastro' }),
+      authSubmitLabel: s.authMode === 'login' ? 'Entrar' : 'Criar conta',
+      submitAuth: e => this.handleAuthSubmit(e),
+      authorPosts,
+      newPost: () => this.handleNewPost(),
+      logout: () => this.setState({ isAuthor: false, screen: 'home' })
+    };
+  }
+}
+</script>
+</body>
+</html>

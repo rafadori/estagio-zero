@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+:root{
+--font-display:'Oswald','Arial Narrow',sans-serif;
+--font-body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+--text-xs:.75rem;--text-sm:.875rem;--text-base:1rem;--text-lg:1.125rem;--text-xl:1.375rem;--text-2xl:1.75rem;--text-3xl:2.25rem;--text-4xl:3rem;--text-5xl:4rem;
+--leading-tight:1.05;--leading-snug:1.25;--leading-normal:1.6;
+--tracking-tight:-0.01em;--tracking-wide:0.04em;--tracking-wider:0.08em;
+}
