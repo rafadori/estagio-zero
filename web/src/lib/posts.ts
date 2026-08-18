@@ -20,7 +20,7 @@ export const posts: Post[] = [
     excerpt:
       "Rodamos 300km com o motorzinho 1.0 pra saber se vale o preço. Spoiler: o careca do pneu original não ajuda.",
     category: categoryBySlug["test-drive"],
-    author: "Bia Ferraz",
+    author: "Ágata",
     date: "2026-08-14",
     featured: true,
     tags: ["volkswagen", "polo track", "hatch", "entrada"],
@@ -38,7 +38,7 @@ export const posts: Post[] = [
     excerpt:
       "Chevrolet mexeu no que era pra mexer: acabamento, central multimídia e um motor que finalmente não sofre em ladeira.",
     category: categoryBySlug["lancamentos"],
-    author: "Rafael Dorí",
+    author: "Guilherme",
     date: "2026-08-12",
     badge: "NOVO",
     tags: ["chevrolet", "onix", "lançamento", "turbo"],
@@ -55,7 +55,7 @@ export const posts: Post[] = [
     excerpt:
       "Ferramenta, óleo certo e 40 minutos de sábado. Mostramos onde a maioria erra na hora de apertar o dreno.",
     category: categoryBySlug["manutencao"],
-    author: "Rafael Dorí",
+    author: "Rafael",
     date: "2026-08-10",
     tags: ["manutenção", "óleo", "faça você mesmo"],
     body: [
@@ -71,7 +71,7 @@ export const posts: Post[] = [
     excerpt:
       "Acompanhamos a restauração completa de um 1974 e fizemos as contas: peça por peça, mão de obra por mão de obra.",
     category: categoryBySlug["classicos"],
-    author: "Bia Ferraz",
+    author: "Luan",
     date: "2026-08-07",
     badge: "VÍDEO",
     tags: ["volkswagen", "fusca", "restauração", "clássico"],
@@ -88,7 +88,7 @@ export const posts: Post[] = [
     excerpt:
       "Pegamos os números de manutenção, IPVA e recarga de três modelos populares. A conta fecha, mas não do jeito que você imagina.",
     category: categoryBySlug["opiniao"],
-    author: "Rafael Dorí",
+    author: "Renan",
     date: "2026-08-05",
     tags: ["elétrico", "opinião", "custo de propriedade"],
     body: [
@@ -104,7 +104,7 @@ export const posts: Post[] = [
     excerpt:
       "TWI, profundidade mínima e o que os agentes de trânsito realmente olham na hora da blitz.",
     category: categoryBySlug["manutencao"],
-    author: "Bia Ferraz",
+    author: "Gabriel",
     date: "2026-08-03",
     tags: ["pneu", "manutenção", "legislação"],
     body: [
@@ -120,7 +120,7 @@ export const posts: Post[] = [
     excerpt:
       "Consumo na estrada, revisão programada e valor de revenda depois de 3 anos. Um dos dois perde feio numa dessas contas.",
     category: categoryBySlug["test-drive"],
-    author: "Rafael Dorí",
+    author: "Ágata",
     date: "2026-08-01",
     tags: ["hyundai", "hb20", "volkswagen", "polo", "comparativo"],
     body: [
@@ -136,7 +136,7 @@ export const posts: Post[] = [
     excerpt:
       "A história de como um projeto secundário virou o carro mais cobiçado dos anos 70 no Brasil.",
     category: categoryBySlug["classicos"],
-    author: "Bia Ferraz",
+    author: "Renan",
     date: "2026-07-28",
     tags: ["chevrolet", "opala", "história", "clássico"],
     body: [

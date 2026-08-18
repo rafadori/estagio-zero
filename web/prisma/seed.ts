@@ -19,13 +19,22 @@ const prisma = new PrismaClient({ adapter });
 const SEED_PASSWORD = "estagiozero123";
 
 const authorEmails: Record<string, string> = {
-  "Bia Ferraz": "bia@estagiozero.com.br",
-  "Rafael Dorí": "rafael@estagiozero.com.br",
+  Rafael: "rafael@estagiozero.com.br",
+  Luan: "luan@estagiozero.com.br",
+  Renan: "renan@estagiozero.com.br",
+  Ágata: "agata@estagiozero.com.br",
+  Gabriel: "gabriel@estagiozero.com.br",
+  Guilherme: "guilherme@estagiozero.com.br",
 };
 
+// Sem hierarquia entre o time por enquanto — todo mundo como AUTHOR.
 const authorRoles: Record<string, Role> = {
-  "Bia Ferraz": "AUTHOR",
-  "Rafael Dorí": "ADMIN",
+  Rafael: "AUTHOR",
+  Luan: "AUTHOR",
+  Renan: "AUTHOR",
+  Ágata: "AUTHOR",
+  Gabriel: "AUTHOR",
+  Guilherme: "AUTHOR",
 };
 
 async function main() {
@@ -150,6 +159,25 @@ async function main() {
   }
   console.log(`Posts: ${posts.length}`);
   console.log(`Comentários novos: ${commentCount}`);
+
+  // 5. Remove usuários que não fazem mais parte do time (ex: os autores
+  // fictícios de antes da troca pelo time real). Só apaga quem não tem
+  // mais nenhum post — os posts de todo mundo já foram reatribuídos acima.
+  const currentEmails = Object.values(authorEmails);
+  const stale = await prisma.user.findMany({
+    where: { email: { notIn: currentEmails } },
+    include: { _count: { select: { posts: true } } },
+  });
+  for (const user of stale) {
+    if (user._count.posts > 0) {
+      console.warn(
+        `Não removi "${user.name}" (${user.email}): ainda tem ${user._count.posts} post(s).`
+      );
+      continue;
+    }
+    await prisma.user.delete({ where: { id: user.id } });
+    console.log(`Removido usuário antigo: ${user.name} (${user.email})`);
+  }
 }
 
 main()

@@ -7,18 +7,39 @@ export type Author = {
   bio: string;
 };
 
-// Dados fictícios — trocar por uma tabela de usuários (com papel) quando o
-// banco entrar. Chave é o nome como aparece em Post.author.
+// Time real do projeto (apresentação da turma). Chave é o nome como
+// aparece em Post.author. Bio genérica de propósito — não inventamos
+// histórico pessoal de ninguém do grupo.
 export const authors: Record<string, Author> = {
-  "Bia Ferraz": {
-    name: "Bia Ferraz",
-    role: "Editora",
-    bio: "Mexe em carro desde os 14 anos porque o pai não deixava a oficina barata perto do Fusca da família. Curte clássico, roda pista amadora nos fins de semana.",
+  Rafael: {
+    name: "Rafael",
+    role: "Colaborador(a)",
+    bio: "Parte do time que criou o Estágio Zero.",
   },
-  "Rafael Dorí": {
-    name: "Rafael Dorí",
-    role: "Fundador",
-    bio: "Troca o próprio óleo, já fez retífica de motor no fundo de quintal e acha que revisão de concessionária é onde o dinheiro vai pra morrer.",
+  Luan: {
+    name: "Luan",
+    role: "Colaborador(a)",
+    bio: "Parte do time que criou o Estágio Zero.",
+  },
+  Renan: {
+    name: "Renan",
+    role: "Colaborador(a)",
+    bio: "Parte do time que criou o Estágio Zero.",
+  },
+  Ágata: {
+    name: "Ágata",
+    role: "Colaborador(a)",
+    bio: "Parte do time que criou o Estágio Zero.",
+  },
+  Gabriel: {
+    name: "Gabriel",
+    role: "Colaborador(a)",
+    bio: "Parte do time que criou o Estágio Zero.",
+  },
+  Guilherme: {
+    name: "Guilherme",
+    role: "Colaborador(a)",
+    bio: "Parte do time que criou o Estágio Zero.",
   },
 };
 
