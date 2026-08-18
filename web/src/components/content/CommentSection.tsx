@@ -1,50 +1,59 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { Comment } from "@/lib/types";
 import { formatDate } from "@/lib/format";
 import { Button } from "@/components/core/Button";
+import { submitComment } from "@/lib/actions/comments";
 import styles from "./CommentSection.module.css";
 
 type CommentSectionProps = {
+  postSlug: string;
   initialComments: Comment[];
 };
 
-/** Static-data demo of the anonymous-comment flow described in the
- * pre-engenharia doc: nome obrigatório + email opcional + honeypot, e o
- * comentário novo entra "pendente" até moderação. Nada é enviado a um
- * servidor ainda — é só a UI, pronta pra plugar no back-end depois. */
-export function CommentSection({ initialComments }: CommentSectionProps) {
+/** Fluxo de comentário anônimo descrito no doc de pré-engenharia: nome
+ * obrigatório + email opcional, honeypot, checagem de tempo de envio — e o
+ * comentário novo entra "pendente" até um editor aprovar. A Server Action
+ * (src/lib/actions/comments.ts) grava de verdade no Postgres. */
+export function CommentSection({ postSlug, initialComments }: CommentSectionProps) {
   const [comments, setComments] = useState(initialComments);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [body, setBody] = useState("");
-  const [justSubmitted, setJustSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [error, setError] = useState<string | null>(null);
+  // Date.now() é impuro — não pode rodar durante o render. Guardamos 0
+  // até o efeito de montagem preencher o valor real.
+  const formOpenedAt = useRef(0);
+  useEffect(() => {
+    formOpenedAt.current = Date.now();
+  }, []);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setStatus("sending");
+    setError(null);
 
     const form = new FormData(event.currentTarget);
-    // honeypot: campo escondido que só bot preenche — se vier preenchido,
-    // descartamos silenciosamente (sem avisar o remetente que é bot).
-    if (form.get("website")) {
-      setName("");
-      setBody("");
+    form.set("renderedAt", String(formOpenedAt.current));
+
+    const result = await submitComment(postSlug, form);
+
+    if (!result.ok) {
+      setStatus("error");
+      setError(result.error);
       return;
     }
 
-    if (!name.trim() || !body.trim()) return;
+    if (result.comment) {
+      setComments((prev) => [result.comment as Comment, ...prev]);
+    }
 
-    const newComment: Comment = {
-      id: `local-${Date.now()}`,
-      author: name.trim(),
-      date: new Date().toISOString(),
-      body: body.trim(),
-    };
-
-    setComments((prev) => [newComment, ...prev]);
     setName("");
+    setEmail("");
     setBody("");
-    setJustSubmitted(true);
+    setStatus("sent");
   }
 
   return (
@@ -65,6 +74,7 @@ export function CommentSection({ initialComments }: CommentSectionProps) {
             </label>
             <input
               id="comment-name"
+              name="name"
               className="ez-input"
               type="text"
               value={name}
@@ -79,8 +89,11 @@ export function CommentSection({ initialComments }: CommentSectionProps) {
             </label>
             <input
               id="comment-email"
+              name="email"
               className="ez-input"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="só se quiser resposta por email"
             />
           </div>
@@ -92,6 +105,7 @@ export function CommentSection({ initialComments }: CommentSectionProps) {
           </label>
           <textarea
             id="comment-body"
+            name="body"
             className="ez-textarea"
             value={body}
             onChange={(e) => setBody(e.target.value)}
@@ -101,13 +115,15 @@ export function CommentSection({ initialComments }: CommentSectionProps) {
         </div>
 
         <div>
-          <Button type="submit" variant="primary" size="sm">
-            Publicar comentário
+          <Button type="submit" variant="primary" size="sm" disabled={status === "sending"}>
+            {status === "sending" ? "Enviando..." : "Publicar comentário"}
           </Button>
           <p className={styles.notice}>
-            {justSubmitted
-              ? "Recebemos! Seu comentário fica pendente até um editor aprovar."
-              : "Não precisa criar conta. Comentários passam por moderação antes de aparecer pra todo mundo."}
+            {status === "error"
+              ? error
+              : status === "sent"
+                ? "Recebemos! Seu comentário fica pendente até um editor aprovar."
+                : "Não precisa criar conta. Comentários passam por moderação antes de aparecer pra todo mundo."}
           </p>
         </div>
       </form>
@@ -121,9 +137,7 @@ export function CommentSection({ initialComments }: CommentSectionProps) {
               <div className={styles.commentHead}>
                 <span className={styles.commentAuthor}>{comment.author}</span>
                 <span className={styles.commentDate}>{formatDate(comment.date)}</span>
-                {comment.id.startsWith("local-") && (
-                  <span className={styles.pendingBadge}>Pendente</span>
-                )}
+                {comment.pending && <span className={styles.pendingBadge}>Pendente</span>}
               </div>
               <p className={styles.commentBody}>{comment.body}</p>
             </li>

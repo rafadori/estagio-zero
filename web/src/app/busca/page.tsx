@@ -1,18 +1,57 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
-import { searchPosts } from "@/lib/posts";
+import type { Post } from "@/lib/types";
 import { PostCard } from "@/components/content/PostCard";
 import styles from "./search.module.css";
 
-// Filtro em memória sobre os posts fake — um protótipo descartável, como
-// recomenda o documento de pré-engenharia. Na versão com banco, isso vira
-// full-text search do Postgres (tsvector/tsquery + índice GIN).
+const DEBOUNCE_MS = 300;
+
+// Busca real contra /api/search (ILIKE via Prisma — ver src/lib/data.ts),
+// com debounce pra não bater no banco a cada tecla digitada.
 export default function SearchPage() {
   const [query, setQuery] = useState("");
-  const results = useMemo(() => searchPosts(query), [query]);
+  const [results, setResults] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(false);
   const hasQuery = query.trim().length > 0;
+
+  useEffect(() => {
+    const q = query.trim();
+    const controller = new AbortController();
+
+    // Tudo que muda estado fica dentro do timeout (mesmo o caso "sem
+    // busca"), pra nunca chamar setState de forma síncrona no corpo do
+    // efeito — só dispara no próximo tick, quebrando a cadeia de renders.
+    const timer = setTimeout(
+      async () => {
+        if (!q) {
+          setResults([]);
+          setLoading(false);
+          return;
+        }
+
+        setLoading(true);
+        try {
+          const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
+            signal: controller.signal,
+          });
+          const data = await res.json();
+          setResults(data.results ?? []);
+        } catch (err) {
+          if ((err as Error).name !== "AbortError") setResults([]);
+        } finally {
+          setLoading(false);
+        }
+      },
+      q ? DEBOUNCE_MS : 0
+    );
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [query]);
 
   return (
     <section className="container">
@@ -31,7 +70,7 @@ export default function SearchPage() {
         </div>
       </div>
 
-      {hasQuery && (
+      {hasQuery && !loading && (
         <p className={`muted ${styles.status}`}>
           {results.length === 0
             ? `Nada encontrado pra "${query}".`

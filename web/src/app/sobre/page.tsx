@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { authors } from "@/lib/authors";
+import { getTeam } from "@/lib/data";
+import { roleLabel } from "@/lib/format";
 import styles from "./about.module.css";
 
 export const metadata: Metadata = {
   title: "Sobre — Estágio Zero",
   description: "Quem faz o Estágio Zero e por que ele existe.",
 };
+
+export const revalidate = 300;
 
 function initials(name: string): string {
   return name
@@ -16,7 +19,9 @@ function initials(name: string): string {
     .join("");
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const team = await getTeam();
+
   return (
     <div className={styles.wrap}>
       <h1 className={styles.title}>Sobre</h1>
@@ -41,13 +46,13 @@ export default function AboutPage() {
       </p>
 
       <div className={styles.team}>
-        {Object.values(authors).map((author) => (
-          <div key={author.name} className={styles.person}>
-            <div className={styles.avatar}>{initials(author.name)}</div>
+        {team.map((member) => (
+          <div key={member.name} className={styles.person}>
+            <div className={styles.avatar}>{initials(member.name)}</div>
             <div>
-              <div className={styles.name}>{author.name}</div>
-              <div className={styles.role}>{author.role}</div>
-              <p className={styles.bio}>{author.bio}</p>
+              <div className={styles.name}>{member.name}</div>
+              <div className={styles.role}>{roleLabel(member.role)}</div>
+              {member.bio && <p className={styles.bio}>{member.bio}</p>}
             </div>
           </div>
         ))}

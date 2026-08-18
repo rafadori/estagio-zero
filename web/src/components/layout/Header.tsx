@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { categories } from "@/lib/posts";
+import { getCategories } from "@/lib/data";
 import { ThemeToggle } from "./ThemeToggle";
 import { MobileNav } from "./MobileNav";
 import styles from "./Header.module.css";
 
-export function Header() {
+export async function Header() {
+  const categories = await getCategories();
+
   return (
     <header className={styles.header}>
       <div className={`container ${styles.bar}`}>

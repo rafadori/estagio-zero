@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { categories, getCategoryBySlug, getPostsByCategory } from "@/lib/posts";
+import { getCategories, getCategoryBySlug, getPostsByCategory } from "@/lib/data";
 import { PostCard } from "@/components/content/PostCard";
 
-export function generateStaticParams() {
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const categories = await getCategories();
   return categories.map((category) => ({ slug: category.slug }));
 }
 
@@ -11,7 +14,7 @@ export async function generateMetadata(
   props: PageProps<"/categoria/[slug]">
 ): Promise<Metadata> {
   const { slug } = await props.params;
-  const category = getCategoryBySlug(slug);
+  const category = await getCategoryBySlug(slug);
   if (!category) return {};
   return {
     title: `${category.name} — Estágio Zero`,
@@ -23,10 +26,10 @@ export default async function CategoryPage(
   props: PageProps<"/categoria/[slug]">
 ) {
   const { slug } = await props.params;
-  const category = getCategoryBySlug(slug);
+  const category = await getCategoryBySlug(slug);
   if (!category) notFound();
 
-  const categoryPosts = getPostsByCategory(category.slug);
+  const categoryPosts = await getPostsByCategory(category.slug);
 
   return (
     <section className="container section">

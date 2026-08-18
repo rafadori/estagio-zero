@@ -1,22 +1,45 @@
 import { PostCard } from "@/components/content/PostCard";
 import { Button } from "@/components/core/Button";
 import {
-  categories,
+  getCategories,
   getFeaturedPost,
   getLatestPosts,
   getPostsByCategory,
-} from "@/lib/posts";
+} from "@/lib/data";
 
-export default function Home() {
-  const featured = getFeaturedPost();
-  const latest = getLatestPosts(featured.slug, 3);
+// Revalida a home a cada minuto — sem isso, uma matéria nova só apareceria
+// no próximo deploy (a página é gerada uma vez e cacheada).
+export const revalidate = 60;
+
+export default async function Home() {
+  const featured = await getFeaturedPost();
+  if (!featured) {
+    return (
+      <section className="container section">
+        <p className="muted">Ainda não publicamos nenhuma matéria.</p>
+      </section>
+    );
+  }
+
+  const [latestHero, latestGrid, categories] = await Promise.all([
+    getLatestPosts(featured.slug, 3),
+    getLatestPosts(featured.slug, 6),
+    getCategories(),
+  ]);
+
+  const categorySections = await Promise.all(
+    categories.map(async (category) => ({
+      category,
+      posts: await getPostsByCategory(category.slug, 3),
+    }))
+  );
 
   return (
     <>
       <section className="container hero">
         <PostCard post={featured} featured />
         <div className="hero__side">
-          {latest.map((post) => (
+          {latestHero.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}
         </div>
@@ -30,15 +53,14 @@ export default function Home() {
           </Button>
         </div>
         <div className="grid">
-          {getLatestPosts(featured.slug, 6).map((post) => (
+          {latestGrid.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}
         </div>
       </section>
 
-      {categories.map((category) => {
-        const categoryPosts = getPostsByCategory(category.slug, 3);
-        if (categoryPosts.length === 0) return null;
+      {categorySections.map(({ category, posts }) => {
+        if (posts.length === 0) return null;
 
         return (
           <section key={category.slug} className="container section">
@@ -53,7 +75,7 @@ export default function Home() {
               </Button>
             </div>
             <div className="grid">
-              {categoryPosts.map((post) => (
+              {posts.map((post) => (
                 <PostCard key={post.slug} post={post} />
               ))}
             </div>

@@ -1,3 +1,6 @@
+// Dados fictícios — NÃO é mais usado pelo app (que já lê do Postgres via
+// src/lib/data.ts). Mantido só como fonte do prisma/seed.ts.
+
 export type Author = {
   name: string;
   role: string;

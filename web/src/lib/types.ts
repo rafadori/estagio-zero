@@ -9,6 +9,8 @@ export type Post = {
   excerpt: string;
   category: Category;
   author: string;
+  authorRole?: string;
+  authorBio?: string;
   date: string; // ISO date
   badge?: string; // corner marker, e.g. "VÍDEO"
   imageUrl?: string; // omitted -> gray "FOTO" placeholder
@@ -22,4 +24,5 @@ export type Comment = {
   author: string;
   date: string; // ISO date
   body: string;
+  pending?: boolean;
 };

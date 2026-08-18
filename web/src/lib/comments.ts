@@ -1,7 +1,8 @@
 import type { Comment } from "./types";
 
-// Comentários fictícios só pra layout — a fila de moderação (pendente/
-// aprovado) e o formulário funcional entram junto com o banco de dados.
+// Comentários fictícios — NÃO é mais usado pelo app (que já lê/grava no
+// Postgres via src/lib/data.ts e src/lib/actions/comments.ts). Mantido só
+// como fonte do prisma/seed.ts.
 const commentsBySlug: Record<string, Comment[]> = {
   "novo-polo-track-vale-o-preco": [
     {

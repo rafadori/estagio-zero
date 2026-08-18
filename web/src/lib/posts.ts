@@ -1,7 +1,7 @@
 import type { Category, Post } from "./types";
 
-// Dados fictícios para o desenvolvimento visual. Serão substituídos por
-// dados vindos do banco (Postgres/Prisma) na etapa seguinte do projeto.
+// Dados fictícios — NÃO é mais usado pelo app (que já lê do Postgres via
+// src/lib/data.ts). Mantido só como fonte do prisma/seed.ts.
 
 export const categories: Category[] = [
   { slug: "test-drive", name: "Test Drive" },

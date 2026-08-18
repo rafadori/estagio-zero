@@ -1,23 +1,29 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPostBySlug, getRelatedPosts, posts } from "@/lib/posts";
-import { getAuthor } from "@/lib/authors";
-import { getCommentsBySlug } from "@/lib/comments";
-import { formatDate } from "@/lib/format";
+import {
+  getAllPostSlugs,
+  getCommentsForPost,
+  getPostBySlug,
+  getRelatedPosts,
+} from "@/lib/data";
+import { formatDate, roleLabel } from "@/lib/format";
 import { Tag } from "@/components/core/Tag";
 import { PostCard } from "@/components/content/PostCard";
 import { CommentSection } from "@/components/content/CommentSection";
 import styles from "./article.module.css";
 
-export function generateStaticParams() {
-  return posts.map((post) => ({ slug: post.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const slugs = await getAllPostSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata(
   props: PageProps<"/materia/[slug]">
 ): Promise<Metadata> {
   const { slug } = await props.params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return {};
   return { title: `${post.title} — Estágio Zero`, description: post.excerpt };
 }
@@ -35,12 +41,13 @@ export default async function ArticlePage(
   props: PageProps<"/materia/[slug]">
 ) {
   const { slug } = await props.params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const author = getAuthor(post.author);
-  const related = getRelatedPosts(post);
-  const comments = getCommentsBySlug(post.slug);
+  const [related, comments] = await Promise.all([
+    getRelatedPosts(post),
+    getCommentsForPost(post.slug),
+  ]);
 
   return (
     <article>
@@ -75,13 +82,15 @@ export default async function ArticlePage(
           ))}
         </div>
 
-        {author.bio && (
+        {post.authorBio && (
           <div className={styles.authorBox}>
-            <div className={styles.avatar}>{initials(author.name)}</div>
+            <div className={styles.avatar}>{initials(post.author)}</div>
             <div>
-              <div className={styles.authorName}>{author.name}</div>
-              <div className={styles.authorRole}>{author.role}</div>
-              <p className={styles.authorBio}>{author.bio}</p>
+              <div className={styles.authorName}>{post.author}</div>
+              <div className={styles.authorRole}>
+                {post.authorRole ? roleLabel(post.authorRole) : null}
+              </div>
+              <p className={styles.authorBio}>{post.authorBio}</p>
             </div>
           </div>
         )}
@@ -101,7 +110,7 @@ export default async function ArticlePage(
       )}
 
       <div className={styles.commentsWrap}>
-        <CommentSection initialComments={comments} />
+        <CommentSection postSlug={post.slug} initialComments={comments} />
       </div>
     </article>
   );
