@@ -26,8 +26,8 @@ export const authors: Record<string, Author> = {
     role: "Colaborador(a)",
     bio: "Parte do time que criou o Estágio Zero.",
   },
-  Ágata: {
-    name: "Ágata",
+  Agata: {
+    name: "Agata",
     role: "Colaborador(a)",
     bio: "Parte do time que criou o Estágio Zero.",
   },

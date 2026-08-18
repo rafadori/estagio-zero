@@ -22,7 +22,7 @@ const authorEmails: Record<string, string> = {
   Rafael: "rafael@estagiozero.com.br",
   Luan: "luan@estagiozero.com.br",
   Renan: "renan@estagiozero.com.br",
-  Ágata: "agata@estagiozero.com.br",
+  Agata: "agata@estagiozero.com.br",
   Gabriel: "gabriel@estagiozero.com.br",
   Guilherme: "guilherme@estagiozero.com.br",
 };
@@ -32,7 +32,7 @@ const authorRoles: Record<string, Role> = {
   Rafael: "AUTHOR",
   Luan: "AUTHOR",
   Renan: "AUTHOR",
-  Ágata: "AUTHOR",
+  Agata: "AUTHOR",
   Gabriel: "AUTHOR",
   Guilherme: "AUTHOR",
 };

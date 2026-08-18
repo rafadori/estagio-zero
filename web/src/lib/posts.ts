@@ -20,7 +20,7 @@ export const posts: Post[] = [
     excerpt:
       "Rodamos 300km com o motorzinho 1.0 pra saber se vale o preço. Spoiler: o careca do pneu original não ajuda.",
     category: categoryBySlug["test-drive"],
-    author: "Ágata",
+    author: "Agata",
     date: "2026-08-14",
     featured: true,
     tags: ["volkswagen", "polo track", "hatch", "entrada"],
@@ -120,7 +120,7 @@ export const posts: Post[] = [
     excerpt:
       "Consumo na estrada, revisão programada e valor de revenda depois de 3 anos. Um dos dois perde feio numa dessas contas.",
     category: categoryBySlug["test-drive"],
-    author: "Ágata",
+    author: "Agata",
     date: "2026-08-01",
     tags: ["hyundai", "hb20", "volkswagen", "polo", "comparativo"],
     body: [
