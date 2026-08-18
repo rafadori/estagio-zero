@@ -47,3 +47,6 @@ web/src/generated
 # editor
 .vscode/*
 !.vscode/extensions.json
+
+# doc de pré-engenharia — mantido só localmente
+pre-engenharia-blog-automotivo.md
