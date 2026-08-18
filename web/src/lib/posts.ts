@@ -18,7 +18,7 @@ export const posts: Post[] = [
     slug: "novo-polo-track-vale-o-preco",
     title: "Novo Polo Track: o Volks mais barato ficou bom?",
     excerpt:
-      "Rodamos 300km com o motorzinho 1.0 pra saber se vale o preço. O careca do pneu original não ajuda.",
+      "Rodamos 300km com o motorzinho 1.0 pra saber se vale o preço.",
     category: categoryBySlug["test-drive"],
     author: "Agata",
     date: "2026-08-14",
