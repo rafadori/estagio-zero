@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Oswald, Inter } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { AuthSessionProvider } from "@/components/providers/AuthSessionProvider";
 import "./globals.css";
 
 const oswald = Oswald({
@@ -45,9 +46,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <AuthSessionProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </AuthSessionProvider>
       </body>
     </html>
   );

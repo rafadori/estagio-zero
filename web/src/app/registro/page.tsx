@@ -1,20 +1,22 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useActionState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/core/Button";
+import { registerAction } from "@/lib/actions/auth";
 import styles from "@/styles/auth.module.css";
 
-// UI de autenticação sem back-end ainda — entra o Auth.js/NextAuth (com
-// papel Admin/Autor/Colaborador) numa etapa seguinte do projeto. Registro
-// público fica pra "pedir acesso": quem aprova o papel é um admin depois.
+// Registro público entra como Colaborador(a) — um Admin/Autor(a) promove o
+// papel depois (aprovação manual, ver painel do autor numa etapa seguinte).
 export default function RegisterPage() {
-  const [submitted, setSubmitted] = useState(false);
+  const [state, formAction, isPending] = useActionState(registerAction, undefined);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSubmitted(true);
-  }
+  useEffect(() => {
+    // Reload de verdade (não router.push) — garante que o SessionProvider
+    // remonte e leia o cookie de sessão novo. Ver nota em actions/auth.ts.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    if (state?.ok) window.location.href = "/";
+  }, [state]);
 
   return (
     <div className={styles.wrap}>
@@ -27,7 +29,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} action={formAction}>
           <div className="ez-field">
             <label className="ez-field__label" htmlFor="name">
               Nome
@@ -71,21 +73,21 @@ export default function RegisterPage() {
             />
           </div>
 
-          <Button type="submit" variant="primary" className={styles.submit}>
-            Pedir acesso
+          <Button
+            type="submit"
+            variant="primary"
+            className={styles.submit}
+            disabled={isPending}
+          >
+            {isPending ? "Enviando..." : "Pedir acesso"}
           </Button>
+
+          {state?.error && <p className={styles.error}>{state.error}</p>}
         </form>
 
         <p className={styles.switch}>
           Já tem conta? <Link href="/login">Entrar</Link>
         </p>
-
-        {submitted && (
-          <p className={styles.devNote}>
-            Registro ainda não está conectado — entra junto com o Auth.js na
-            próxima etapa do projeto.
-          </p>
-        )}
       </div>
     </div>
   );

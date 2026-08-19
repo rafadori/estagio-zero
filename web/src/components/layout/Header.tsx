@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { getCategories } from "@/lib/data";
 import { ThemeToggle } from "./ThemeToggle";
 import { MobileNav } from "./MobileNav";
+import { AuthStatus } from "./AuthStatus";
 import styles from "./Header.module.css";
 
 export async function Header() {
@@ -36,6 +37,7 @@ export async function Header() {
             <Search size={16} />
           </Link>
           <ThemeToggle />
+          <AuthStatus />
           <MobileNav categories={categories} />
         </div>
       </div>

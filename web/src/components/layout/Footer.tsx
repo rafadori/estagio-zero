@@ -14,7 +14,6 @@ export function Footer() {
         <nav className={styles.links} aria-label="Rodapé">
           <Link href="/sobre">Sobre</Link>
           <Link href="/busca">Busca</Link>
-          <Link href="/login">Entrar</Link>
         </nav>
       </div>
     </footer>
