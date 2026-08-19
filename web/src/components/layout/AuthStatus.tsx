@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut } from "lucide-react";
+import { LayoutDashboard, LogOut } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { roleLabel } from "@/lib/format";
 import styles from "./AuthStatus.module.css";
@@ -25,6 +25,13 @@ export function AuthStatus() {
 
   return (
     <div className={styles.wrap}>
+      <Link
+        href="/painel"
+        className="ez-btn ez-btn--secondary ez-btn--sm"
+        aria-label="Painel"
+      >
+        <LayoutDashboard size={16} />
+      </Link>
       <span className={styles.name}>
         {session.user.name}{" "}
         <span className={styles.role}>· {roleLabel(session.user.role)}</span>

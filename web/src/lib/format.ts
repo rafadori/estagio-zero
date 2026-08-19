@@ -20,3 +20,13 @@ const ROLE_LABELS: Record<string, string> = {
 export function roleLabel(role: string): string {
   return ROLE_LABELS[role] ?? role;
 }
+
+const STATUS_LABELS: Record<string, string> = {
+  DRAFT: "Rascunho",
+  PENDING_REVIEW: "Aguardando revisão",
+  PUBLISHED: "Publicado",
+};
+
+export function statusLabel(status: string): string {
+  return STATUS_LABELS[status] ?? status;
+}
