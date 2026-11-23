@@ -67,7 +67,12 @@ export default async function ArticlePage(
 
       <div className={styles.hero}>
         <div className={styles.heroMedia}>
-          <span>FOTO</span>
+          {post.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={post.imageUrl} alt="" />
+          ) : (
+            <span>FOTO</span>
+          )}
         </div>
       </div>
 

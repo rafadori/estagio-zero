@@ -29,6 +29,7 @@ export type AdminPostDetail = {
   featured: boolean;
   status: PostStatus;
   authorId: string;
+  imageUrl: string | null;
 };
 
 export async function getCategoriesForForm(): Promise<
@@ -94,5 +95,6 @@ export async function getPostForEdit(
     featured: post.featured,
     status: post.status,
     authorId: post.authorId,
+    imageUrl: post.imageUrl,
   };
 }

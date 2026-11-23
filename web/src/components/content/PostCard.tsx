@@ -20,7 +20,12 @@ export function PostCard({ post, featured = false }: PostCardProps) {
       <Link href={`/materia/${post.slug}`} aria-label={post.title}>
         <div className="ez-postcard__media">
           {post.badge && <Badge>{post.badge}</Badge>}
-          <span>FOTO</span>
+          {post.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={post.imageUrl} alt="" />
+          ) : (
+            <span>FOTO</span>
+          )}
         </div>
       </Link>
       <div className="ez-postcard__body">

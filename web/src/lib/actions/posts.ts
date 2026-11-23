@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slugify";
 import { canManagePost } from "@/lib/admin-data";
+import { uploadPostImage, deletePostImage } from "@/lib/blob";
 import type { Role } from "@/generated/prisma/client";
 
 export type PostFormState = { error?: string } | undefined;
@@ -67,6 +68,12 @@ async function syncTags(postId: string, tagNames: string[]) {
   }
 }
 
+function getSelectedImage(formData: FormData): File | null {
+  const file = formData.get("image");
+  if (file instanceof File && file.size > 0) return file;
+  return null;
+}
+
 async function uniqueSlug(title: string): Promise<string> {
   const base = slugify(title) || "materia";
   let candidate = base;
@@ -104,6 +111,14 @@ export async function createPost(
   const category = await prisma.category.findUnique({ where: { id: parsed.categoryId } });
   if (!category) return { error: "Categoria inválida." };
 
+  let imageUrl: string | null = null;
+  const imageFile = getSelectedImage(formData);
+  if (imageFile) {
+    const result = await uploadPostImage(imageFile, slug);
+    if ("error" in result) return { error: result.error };
+    imageUrl = result.url;
+  }
+
   const post = await prisma.post.create({
     data: {
       slug,
@@ -113,6 +128,7 @@ export async function createPost(
       badge: parsed.badge,
       featured: parsed.featured,
       status,
+      imageUrl,
       publishedAt: status === "PUBLISHED" ? new Date() : null,
       authorId: session.user.id,
       categoryId: parsed.categoryId,
@@ -150,6 +166,17 @@ export async function updatePost(
   const category = await prisma.category.findUnique({ where: { id: parsed.categoryId } });
   if (!category) return { error: "Categoria inválida." };
 
+  // Sem arquivo novo -> mantém a imagem que já estava. Com arquivo novo,
+  // sobe primeiro e só troca no banco se der certo (a antiga só é apagada
+  // depois, pra nunca ficar sem nenhuma se o upload falhar no meio).
+  let imageUrl = existing.imageUrl;
+  const imageFile = getSelectedImage(formData);
+  if (imageFile) {
+    const result = await uploadPostImage(imageFile, existing.slug);
+    if ("error" in result) return { error: result.error };
+    imageUrl = result.url;
+  }
+
   await prisma.post.update({
     where: { id },
     data: {
@@ -159,12 +186,17 @@ export async function updatePost(
       badge: parsed.badge,
       featured: parsed.featured,
       status,
+      imageUrl,
       // Só carimba a data na primeira publicação — editar depois não muda
       // "publicado em".
       publishedAt: status === "PUBLISHED" ? (existing.publishedAt ?? new Date()) : existing.publishedAt,
       categoryId: parsed.categoryId,
     },
   });
+
+  if (imageFile && existing.imageUrl) {
+    await deletePostImage(existing.imageUrl);
+  }
   await syncTags(id, parsed.tagNames);
 
   revalidatePublicPaths(category.slug, existing.slug);
@@ -226,6 +258,7 @@ export async function deletePost(id: string) {
   const category = await prisma.category.findUnique({ where: { id: post.categoryId } });
 
   await prisma.post.delete({ where: { id } });
+  if (post.imageUrl) await deletePostImage(post.imageUrl);
   revalidatePublicPaths(category?.slug, post.slug);
   revalidatePath("/painel");
 }

@@ -19,6 +19,7 @@ type PostFormProps = {
     badge: string;
     featured: boolean;
     status: string;
+    imageUrl: string | null;
   };
 };
 
@@ -64,6 +65,27 @@ export function PostForm({ action, categories, role, initial }: PostFormProps) {
           rows={2}
           required
         />
+      </div>
+
+      <div className="ez-field">
+        <label className="ez-field__label" htmlFor="image">
+          Imagem de capa {initial ? "(opcional — troca a atual)" : "(opcional)"}
+        </label>
+        {initial?.imageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={initial.imageUrl} alt="" className={styles.preview} />
+        )}
+        <input
+          id="image"
+          name="image"
+          className="ez-input"
+          type="file"
+          accept="image/*"
+        />
+        <p className="ez-field__hint">
+          JPG, PNG ou WEBP, até 8MB. Sem imagem, o card usa o placeholder
+          &ldquo;FOTO&rdquo;.
+        </p>
       </div>
 
       <div className={styles.row}>

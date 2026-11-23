@@ -41,3 +41,13 @@
   color: var(--color-danger);
   font-size: var(--text-sm);
 }
+
+.preview {
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: var(--border-hairline);
+  margin-bottom: var(--space-2);
+}
