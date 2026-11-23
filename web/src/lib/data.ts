@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import type { Category, Comment, Post } from "@/lib/types";
 
 // Camada de dados — espelha a API que existia em src/lib/posts.ts (agora
@@ -144,26 +144,77 @@ export async function getCommentsForPost(postSlug: string): Promise<Comment[]> {
   return comments.map(mapComment);
 }
 
-// Busca simples com ILIKE (case-insensitive) sobre título/resumo/tags/
-// categoria — o protótipo descartável que o documento de pré-engenharia
-// recomenda pra essa escala. Trocar por full-text search (tsvector + GIN)
-// se o volume de matérias crescer.
+// Acentos que o translate() do Postgres troca pela letra sem acento — o
+// mesmo mapa que normalizeSearchText() aplica na consulta digitada. Assim
+// "lideranca" acha "liderança" e "MECANICA" acha "mecânica" (no celular
+// quase ninguém digita acento). Sem extensão do Postgres (unaccent) pra
+// não depender do que o provedor de banco habilita.
+const ACCENTED = "áàâãäéèêëíìîïóòôõöúùûüçñ";
+const PLAIN = "aaaaaeeeeiiiiooooouuuucn";
+
+function normalizeSearchText(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function escapeLike(term: string): string {
+  return term.replace(/[\\%_]/g, (c) => `\\${c}`);
+}
+
+// Busca por palavras: cada palavra digitada precisa aparecer em algum lugar
+// (título, resumo, corpo, categoria ou tags), em qualquer ordem, ignorando
+// acento e maiúscula. Prefixo vale ("lider" acha "liderança"), o que combina
+// com a busca ao vivo enquanto a pessoa digita. Resultados com mais palavras
+// no título vêm primeiro.
+//
+// Escala: varre as matérias publicadas sem índice — ok pra centenas de
+// posts. Se crescer muito, o próximo passo do doc de pré-engenharia é
+// full-text search (tsvector + GIN, pg_trgm pra erro de digitação).
 export async function searchPosts(query: string): Promise<Post[]> {
-  const q = query.trim();
-  if (!q) return [];
+  const words = normalizeSearchText(query)
+    .split(/\s+/)
+    .filter((w) => w.length >= 2)
+    .slice(0, 8);
+  if (words.length === 0) return [];
+
+  const plain = (expr: Prisma.Sql) =>
+    Prisma.sql`translate(lower(${expr}), ${ACCENTED}, ${PLAIN})`;
+
+  const doc = plain(
+    Prisma.sql`p.title || ' ' || p.excerpt || ' ' || p.body || ' ' || c.name || ' ' ||
+      coalesce((SELECT string_agg(t.name, ' ') FROM post_tags pt JOIN tags t ON t.id = pt."tagId" WHERE pt."postId" = p.id), '')`
+  );
+  const title = plain(Prisma.sql`p.title`);
+  const patterns = words.map((w) => `%${escapeLike(w)}%`);
+
+  const matchAll = Prisma.join(
+    patterns.map((pat) => Prisma.sql`${doc} LIKE ${pat}`),
+    " AND "
+  );
+  const titleScore = Prisma.join(
+    patterns.map((pat) => Prisma.sql`(CASE WHEN ${title} LIKE ${pat} THEN 1 ELSE 0 END)`),
+    " + "
+  );
+
+  const rows = await prisma.$queryRaw<{ id: string }[]>`
+    SELECT p.id
+    FROM posts p
+    JOIN categories c ON c.id = p."categoryId"
+    WHERE p.status = 'PUBLISHED' AND ${matchAll}
+    ORDER BY (${titleScore}) DESC, p."publishedAt" DESC
+    LIMIT 30
+  `;
+  if (rows.length === 0) return [];
 
   const posts = await prisma.post.findMany({
-    where: {
-      status: "PUBLISHED",
-      OR: [
-        { title: { contains: q, mode: "insensitive" } },
-        { excerpt: { contains: q, mode: "insensitive" } },
-        { category: { name: { contains: q, mode: "insensitive" } } },
-        { tags: { some: { tag: { name: { contains: q, mode: "insensitive" } } } } },
-      ],
-    },
-    orderBy: { publishedAt: "desc" },
+    where: { id: { in: rows.map((r) => r.id) } },
     include: postInclude,
   });
-  return posts.map(mapPost);
+  const byId = new Map(posts.map((p) => [p.id, p]));
+  return rows.flatMap((r) => {
+    const post = byId.get(r.id);
+    return post ? [mapPost(post)] : [];
+  });
 }
