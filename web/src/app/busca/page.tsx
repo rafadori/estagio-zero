@@ -62,7 +62,7 @@ export default function SearchPage() {
           <input
             type="search"
             className={`ez-input ${styles.input}`}
-            placeholder="Busque por modelo, marca ou assunto"
+            placeholder="Busque por tema, dado ou assunto"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus

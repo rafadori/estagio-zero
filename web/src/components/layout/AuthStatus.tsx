@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, LogOut } from "lucide-react";
+import { LayoutDashboard, LogIn, LogOut } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { roleLabel } from "@/lib/format";
 import styles from "./AuthStatus.module.css";
@@ -17,8 +17,13 @@ export function AuthStatus() {
 
   if (!session?.user) {
     return (
-      <Link href="/login" className="ez-btn ez-btn--secondary ez-btn--sm">
-        Entrar
+      <Link
+        href="/login"
+        className={`ez-btn ez-btn--secondary ez-btn--sm ${styles.entrar}`}
+        aria-label="Entrar"
+      >
+        <LogIn size={16} />
+        <span className={styles.label}>Entrar</span>
       </Link>
     );
   }

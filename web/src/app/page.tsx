@@ -1,4 +1,6 @@
 import { PostCard } from "@/components/content/PostCard";
+import { FeaturedBanner } from "@/components/content/FeaturedBanner";
+import { DataStrip } from "@/components/content/DataStrip";
 import { Button } from "@/components/core/Button";
 import {
   getCategories,
@@ -21,8 +23,7 @@ export default async function Home() {
     );
   }
 
-  const [latestHero, latestGrid, categories] = await Promise.all([
-    getLatestPosts(featured.slug, 3),
+  const [latest, categories] = await Promise.all([
     getLatestPosts(featured.slug, 6),
     getCategories(),
   ]);
@@ -36,31 +37,28 @@ export default async function Home() {
 
   return (
     <>
-      <section className="container hero">
-        <PostCard post={featured} featured />
-        <div className="hero__side">
-          {latestHero.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
-        </div>
-      </section>
+      <FeaturedBanner post={featured} />
+      <DataStrip />
 
       <section className="container section">
         <div className="section__head">
           <h2 className="section__title">Últimas</h2>
           <Button href="/busca" variant="ghost" size="sm">
-            Ver tudo →
+            Buscar →
           </Button>
         </div>
         <div className="grid">
-          {latestGrid.map((post) => (
+          {latest.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}
         </div>
       </section>
 
       {categorySections.map(({ category, posts }) => {
-        if (posts.length === 0) return null;
+        // Categoria com só a manchete (ex.: Videocast) não vira seção
+        // repetindo o que já está no topo.
+        const rest = posts.filter((p) => p.slug !== featured.slug);
+        if (rest.length === 0) return null;
 
         return (
           <section key={category.slug} className="container section">
@@ -75,7 +73,7 @@ export default async function Home() {
               </Button>
             </div>
             <div className="grid">
-              {posts.map((post) => (
+              {rest.map((post) => (
                 <PostCard key={post.slug} post={post} />
               ))}
             </div>

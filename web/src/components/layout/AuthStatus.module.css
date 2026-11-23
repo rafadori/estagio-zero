@@ -20,3 +20,15 @@
     display: none;
   }
 }
+
+@media (max-width: 640px) {
+  .label {
+    display: none;
+  }
+}
+
+.entrar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

@@ -18,9 +18,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Estágio Zero — Blog Automotivo",
+  title: "Estágio Zero — Mulheres na indústria automotiva",
   description:
-    "Carros, testes e histórias sem enrolação. Feito por quem também troca o próprio óleo.",
+    "Videocast e blog sobre a presença feminina na indústria automotiva: trajetórias, carreira e os números que ainda pesam contra.",
 };
 
 // Inline script: applies the saved theme before paint to avoid a flash of the

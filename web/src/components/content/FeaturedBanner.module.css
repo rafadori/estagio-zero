@@ -1,0 +1,93 @@
+/* Faixa de manchete da home. Fundo azul-marinho fixo (--blue-900) nos dois
+   temas: não é o acento (que segue reservado pra CTA/link), e contrasta
+   tanto com o fundo branco quanto com o --ink-900 do tema escuro. */
+.banner {
+  background: var(--blue-900);
+  color: #fff;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-7);
+  align-items: center;
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-8);
+}
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-7);
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--blue-300);
+}
+
+.kicker span + span::before {
+  content: "·";
+  margin-right: var(--space-3);
+}
+
+.title {
+  font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+  line-height: var(--leading-tight);
+}
+
+.title a {
+  color: #fff;
+}
+
+.title a:hover {
+  color: var(--blue-300);
+}
+
+.excerpt {
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  color: var(--blue-100);
+  max-width: 560px;
+}
+
+.meta {
+  font-size: var(--text-sm);
+  color: var(--blue-300);
+}
+
+.media {
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue-300);
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-wider);
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

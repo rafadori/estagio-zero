@@ -27,22 +27,22 @@ export default async function AboutPage() {
       <h1 className={styles.title}>Sobre</h1>
 
       <p>
-        O Estágio Zero nasceu porque a gente cansou de ler review de carro
-        escrito por quem nunca deitou embaixo de um. Aqui a régua é simples:
-        se a gente não rodou, não trocou peça ou não fez a conta, a matéria
-        não sai.
+        O Estágio Zero é um videocast e blog sobre mulheres na indústria
+        automotiva. A pergunta que guia o projeto é direta: é preciso provar
+        mais para ser respeitada?
       </p>
 
       <p>
-        Sem assinatura pra ler o texto inteiro, sem review pago disfarçado de
-        opinião. Falamos de carro popular, carro velho, carro que quebra —
-        não só o lançamento bonito de imprensa.
+        A presença feminina no setor está crescendo — passou de 21% em 2017
+        para 24% em 2025, segundo a Automotive Business —, mas ainda some no
+        caminho até a liderança. A gente quer entender por quê, ouvindo quem
+        vive isso: da oficina à engenharia, do estágio à gestão.
       </p>
 
       <p>
-        Comentário é aberto pra qualquer pessoa, sem precisar criar conta.
-        A única exigência é não ser spam — todo comentário passa por
-        moderação antes de aparecer.
+        Aqui os números sempre vêm com fonte, e as histórias vêm de quem
+        contou. Comentário é aberto pra qualquer pessoa, sem precisar criar
+        conta — todo comentário passa por moderação antes de aparecer.
       </p>
 
       <div className={styles.team}>

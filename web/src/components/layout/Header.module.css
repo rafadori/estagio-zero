@@ -57,3 +57,23 @@
     display: none;
   }
 }
+
+/* Celular: 4–5 botões de ícone + logo não cabem em 375px com o padding
+   padrão do .ez-btn--sm. Deixa os botões quadrados e aperta os espaços. */
+@media (max-width: 640px) {
+  .bar {
+    gap: var(--space-3);
+  }
+
+  .wordmark {
+    font-size: var(--text-lg);
+  }
+
+  .actions {
+    gap: var(--space-2);
+  }
+
+  .actions :global(.ez-btn--sm) {
+    padding: 8px;
+  }
+}

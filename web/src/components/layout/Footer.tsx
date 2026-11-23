@@ -8,7 +8,7 @@ export function Footer() {
         <div>
           <div className={styles.wordmark}>Estágio Zero</div>
           <p className={styles.tagline}>
-            Feito por quem também troca o próprio óleo.
+            Feito por um time que quer ver mais mulheres embaixo do capô.
           </p>
         </div>
         <nav className={styles.links} aria-label="Rodapé">
