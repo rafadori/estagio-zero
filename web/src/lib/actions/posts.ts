@@ -24,7 +24,9 @@ type ParsedPost = {
 function parseForm(formData: FormData, role: Role): ParsedPost | { error: string } {
   const title = String(formData.get("title") ?? "").trim();
   const excerpt = String(formData.get("excerpt") ?? "").trim();
-  const body = String(formData.get("body") ?? "").trim();
+  // Textarea envia quebra de linha como CRLF (\r\n). Normaliza pra \n, senão
+  // o split de parágrafos em src/lib/data.ts não acha nenhum "\n\n".
+  const body = String(formData.get("body") ?? "").replace(/\r\n?/g, "\n").trim();
   const categoryId = String(formData.get("categoryId") ?? "").trim();
   const badgeRaw = String(formData.get("badge") ?? "").trim();
   const tagsRaw = String(formData.get("tags") ?? "").trim();

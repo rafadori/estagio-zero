@@ -28,7 +28,12 @@ function mapPost(post: PostWithRelations): Post {
     imageUrl: post.imageUrl ?? undefined,
     featured: post.featured,
     tags: post.tags.map((pt) => pt.tag.name),
-    body: post.body.split("\n\n"),
+    // Tolerante a CRLF e a linha "em branco" com espaços, não só "\n\n".
+    body: post.body
+      .replace(/\r\n?/g, "\n")
+      .split(/\n\s*\n/)
+      .map((p) => p.trim())
+      .filter(Boolean),
   };
 }
 
